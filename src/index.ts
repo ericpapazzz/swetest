@@ -13,6 +13,9 @@ class App {
         // create express application instance
         this.app = express();
         
+        // configure middleware for request parsing
+        this.plugins();
+        
         // establish database connection and sync models
         this.databaseSync();
         

@@ -8,19 +8,19 @@ class UserRoutes extends BaseRoutes{
     public routes(): void{
 
         // create a new user
-        router.post("/createUser", UserController.create);
+        this.router.post("/createUser", UserController.create);
 
         // get all users
-        router.get("/users", UserController.findAll);
+        this.router.get("/users", UserController.findAll);
 
         // get user by ID
-        router.get("/userById/:id", UserController.findById);
+        this.router.get("/userById/:id", UserController.findById);
 
         // update user by ID
-        router.put("/updateUser/:id", UserController.update);
+        this.router.put("/updateUser/:id", UserController.update);
 
         // delete user by ID
-        router.delete("/deleteUser/:id", UserController.delete);
+        this.router.delete("/deleteUser/:id", UserController.delete);
     }
 }
 
