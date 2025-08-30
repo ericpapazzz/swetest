@@ -35,12 +35,14 @@ class UserController {
         try {
             let id = parseInt(req.params["id"] || "0");
             
-            const updatedUser = new User();
+            if (id <= 0) {
+                return res.status(400).json({
+                    status: "Bad Request",
+                    message: "Invalid user ID"
+                });
+            }
 
-            updatedUser.user_id = id
-            updatedUser.username = req.body.username;
-
-            await new UserRepository().update(updatedUser);
+            const updatedUser = await new UserRepository().update(id, req.body.username);
 
             res.status(200).json({
                 status: "OK",
@@ -48,10 +50,12 @@ class UserController {
                 data: updatedUser
             });
         } catch (error) {
+            console.error("Update controller error:", error);
             res.status(500).json({
                 status: "Internal Server Error!",
                 message: "Internal Server Error!",
-            })
+                error: error instanceof Error ? error.message : "Unknown error"
+            });
         }
     }
 
@@ -106,9 +110,11 @@ class UserController {
                 data: users,
             });
         } catch (err) {
+            console.error("FindAll error:", err);
             res.status(500).json({
                 status: "Internal Server Error!",
                 message: "Internal Server Error!",
+                error: err instanceof Error ? err.message : "Unknown error"
             });
         }
     }

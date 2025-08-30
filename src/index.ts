@@ -38,10 +38,15 @@ class App {
     }
 
     // initializes database connection and synchronizes sequelize models
-    protected databaseSync(): void {
-        const db = new Database();
-
-        db.sequelize?.sync();
+    protected async databaseSync(): Promise<void> {
+        try {
+            const db = new Database();
+            // Wait for database connection to be established
+            await db.waitForConnection();
+            console.log("Database initialization completed");
+        } catch (error) {
+            console.error("Database initialization failed:", error);
+        }
     }
 
     protected routes(): void {

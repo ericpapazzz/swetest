@@ -1,10 +1,12 @@
-import {Sequelize} from "sequelize";
+import {Sequelize} from "sequelize-typescript";
 import * as dotenv from "dotenv";
+import { User } from "../data/models/User.js";
 
 dotenv.config();
 
 class Database{
     public sequelize: Sequelize | undefined;
+    private connectionPromise: Promise<void>;
 
     private POSTGRES_DB = process.env.POSTGRES_DB as string;
     private POSTGRES_HOST = process.env.POSTGRES_HOST as string;
@@ -14,7 +16,11 @@ class Database{
 
 
     constructor(){
-        this.connectToPosgres();
+        this.connectionPromise = this.connectToPosgres();
+    }
+    
+    public async waitForConnection(): Promise<void> {
+        await this.connectionPromise;
     }
     
     private async connectToPosgres(){
@@ -24,14 +30,26 @@ class Database{
             password: this.POSTGRES_PASSWORD,
             host: this.POSTGRES_HOST,
             port: this.POSTGRES_PORT,
-            dialect: "postgres"
+            dialect: "postgres",
+            logging: false
         });
 
-        await this.sequelize.authenticate().then(()=>{
-            console.log("PosgreSQL Connection established succesfully");
-        }).catch((err)=> {
-            console.error("Unable to connect to the PostgreSQL database:", err);
-        });
+        try {
+            // register models
+            this.sequelize.addModels([User]);
+            
+            // authenticate connection
+            await this.sequelize.authenticate();
+            console.log("PostgreSQL Connection established successfully");
+            
+            // sync models to create tables
+            await this.sequelize.sync({ force: false });
+            console.log("Models synced successfully");
+            
+        } catch (err) {
+            console.error("Database connection error:", err);
+            throw err;
+        }
     }
 }
 

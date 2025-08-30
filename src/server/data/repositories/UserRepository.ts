@@ -2,7 +2,7 @@ import {User} from "../models/User.js";
 
 interface IUserRepository {
     save(user: User): Promise<void>;
-    update(user: User): Promise<void>;
+    update(userId: number, username: string): Promise<User>;
     delete(userId: number): Promise<void>;
     retrieveById(userId: number): Promise<User>;
     retrieveAll(): Promise<User[]>;
@@ -12,28 +12,32 @@ export class UserRepository implements IUserRepository {
     async save(user: User): Promise<void> {
         try{
             await User.create({
-                user_name: user.username
-            } as any);
+                username: user.username
+            });
         }catch(error){
+            console.error("Save error:", error);
             throw new Error("Failed to create user.");
         }
     }
-    async update(user: User): Promise<void> {
+    async update(userId: number, username: string): Promise<User> {
         try{
-            const newUser = await User.findOne({
+            const existingUser = await User.findOne({
                 where:{
-                    user_id:user.user_id
+                    user_id: userId
                 },
             });
 
-            if(!newUser){
+            if(!existingUser){
                 throw new Error("User not found.");
             }
-            newUser.username = user.username;
-            await newUser.save();
+            existingUser.username = username;
+            await existingUser.save();
 
-        }catch(error){
-            throw new Error("Failed to update user.");
+            return existingUser;
+
+        }catch(err){
+            console.error("Update error:", err);
+            throw new Error("Failed to update user: " + (err instanceof Error ? err.message : String(err)));
         }
     }
     async delete(userId: number): Promise<void> {
@@ -66,8 +70,8 @@ export class UserRepository implements IUserRepository {
             }
 
             return newUser;
-        }catch(error){
-            throw new Error("Failed to retreive user.");
+        }catch(err){
+            throw new Error("Failed to retreive user." + err);
         }
     }
     async retrieveAll(): Promise<User[]> {
@@ -75,8 +79,8 @@ export class UserRepository implements IUserRepository {
 
             return await User.findAll();
 
-        }catch(error){
-            throw new Error("Failed to retrieve all users.");
+        }catch(err){
+            throw new Error("Failed to retrieve all users." + err);
         }
     }
 
