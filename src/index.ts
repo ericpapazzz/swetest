@@ -1,5 +1,5 @@
 import express, {type Application, type Request, type Response} from "express";
-import Database from "./config/database.js";
+import Database from "./server/config/database.js";
 
 
 class App {
