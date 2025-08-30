@@ -1,5 +1,6 @@
 import express, {type Application, type Request, type Response} from "express";
 import Database from "./server/config/database.js";
+import UserRouter from "./server/data/router/UserRoute.js";
 
 /**
  * main application class that configures and initializes the express server
@@ -44,7 +45,8 @@ class App {
         // serves as health check endpoint and application entry point
         this.app.route("/").get((req: Request, res: Response) => {
             res.send("Home");
-        })
+        });
+        this.app.use("/api/v1", UserRouter);
     }
 }
 
