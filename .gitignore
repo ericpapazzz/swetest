@@ -1,0 +1,7 @@
+# Dependecies folders
+node_modules/
+
+#Build artifacts
+build/
+
+# Editor and OS-specific files
