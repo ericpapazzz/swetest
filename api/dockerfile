@@ -1,0 +1,34 @@
+# use a Node.js image with tools needed for the build process
+FROM node:alpine AS builder
+
+# set the working directory in the container
+WORKDIR /usr/src/app
+
+# copy package.json and yarn.lock to leverage Docker's cache
+COPY package.json yarn.lock ./
+
+# install all dependencies, including dev dependencies, needed for the build
+RUN yarn install
+
+# Copy the source code
+COPY . .
+
+# run the build command as defined in package.json
+RUN yarn build
+
+# slim Node.js image for the final container
+FROM node:alpine
+
+# set the working directory
+WORKDIR /usr/src/app
+
+# only copy the essential files from the builder stage
+COPY --from=builder /usr/src/app/build ./build
+COPY --from=builder /usr/src/app/node_modules ./node_modules
+COPY --from=builder /usr/src/app/package.json ./package.json
+
+# expose the port your API listens on
+EXPOSE 8000
+
+# Start the application using the compiled code
+CMD ["node", "./build/index.js"]

@@ -9,12 +9,20 @@
   "scripts": {
     "build": "tsc",
     "dev": "nodemon ./build/index.js",
-    "start-dev": "tsc && yarn dev"
+    "start-dev": "tsc && yarn dev",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
+    "@types/jest": "^29.5.12",
     "@types/node": "^24.3.0",
+    "@types/supertest": "^6.0.2",
+    "jest": "^29.7.0",
     "nodemon": "^3.1.10",
+    "supertest": "^6.3.4",
+    "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
   },

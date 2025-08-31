@@ -1,10 +1,2 @@
-# dependecies folders
-node_modules/
-
-#build artifacts
-build/
-
-# editor and OS-specific files
-
 # environmental variables
 .env
