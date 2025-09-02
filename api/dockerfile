@@ -4,17 +4,17 @@ FROM node:alpine AS builder
 # set the working directory in the container
 WORKDIR /usr/src/app
 
-# copy package.json and yarn.lock to leverage Docker's cache
-COPY package.json yarn.lock ./
+# copy package files to leverage Docker's cache
+COPY package*.json ./
 
 # install all dependencies, including dev dependencies, needed for the build
-RUN yarn install
+RUN npm ci
 
 # Copy the source code
 COPY . .
 
 # run the build command as defined in package.json
-RUN yarn build
+RUN npm run build
 
 # slim Node.js image for the final container
 FROM node:alpine

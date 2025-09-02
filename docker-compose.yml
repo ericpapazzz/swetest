@@ -19,20 +19,25 @@ services:
       - DB_NAME=${DB_NAME}
 
     volumes:
-    - ./api:/usr/src/app
-    - /usr/src/app/node_modules
+      - ./api:/usr/src/app
+      - /usr/src/app/node_modules
 
-  # frontend:
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile
-  #   container_name: swetestfront
-  #   restart: unless-stopped
-  #   ports:
-  #     - "3000:3000"
-  #   volumes:
-  #   depends_on:
-  #     - api
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: swetestfront
+    restart: unless-stopped
+    ports:
+      - "3000:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - api
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
 
   postgres:
     image: postgres:14-alpine
