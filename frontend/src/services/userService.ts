@@ -8,7 +8,12 @@ export const userService = {
     if (!response.ok) {
       throw new Error('Failed to fetch users');
     }
-    return response.json();
+    const responseData = await response.json();
+    if (responseData && responseData.data) {
+      return responseData.data;
+    } else {
+      throw new Error('Invalid response format from server');
+    }
   },
 
   async createUser(username: string): Promise<User> {
@@ -22,7 +27,12 @@ export const userService = {
     if (!response.ok) {
       throw new Error('Failed to create user');
     }
-    return response.json();
+    const responseData = await response.json();
+    if (responseData && responseData.data) {
+      return responseData.data;
+    } else {
+      throw new Error('Invalid response format from server');
+    }
   },
 
   async updateUser(id: string, username: string): Promise<User> {
@@ -36,7 +46,12 @@ export const userService = {
     if (!response.ok) {
       throw new Error('Failed to update user');
     }
-    return response.json();
+    const responseData = await response.json();
+    if (responseData && responseData.data) {
+      return responseData.data;
+    } else {
+      throw new Error('Invalid response format from server');
+    }
   },
 
   async deleteUser(id: string): Promise<void> {
