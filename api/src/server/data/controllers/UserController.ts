@@ -14,12 +14,12 @@ class UserController {
 
             newUser.username = req.body.username;
 
-            await new UserRepository().save(newUser);
+            const createdUser = await new UserRepository().save(newUser);
 
             res.status(200).json({
                 status: "OK",
                 message: "Successfully created User.",
-                data: newUser
+                data: createdUser
             });
         } catch (error) {
             res.status(500).json({

@@ -1,7 +1,7 @@
 import {User} from "../models/User.js";
 
 interface IUserRepository {
-    save(user: User): Promise<void>;
+    save(user: User): Promise<User>;
     update(userId: number, username: string): Promise<User>;
     delete(userId: number): Promise<void>;
     retrieveById(userId: number): Promise<User>;
@@ -9,11 +9,12 @@ interface IUserRepository {
 }
 
 export class UserRepository implements IUserRepository {
-    async save(user: User): Promise<void> {
+    async save(user: User): Promise<User> {
         try{
-            await User.create({
+            const createdUser = await User.create({
                 username: user.username
             });
+            return createdUser; // Return the created user
         }catch(error){
             console.error("Save error:", error);
             throw new Error("Failed to create user.");
@@ -23,7 +24,7 @@ export class UserRepository implements IUserRepository {
         try{
             const existingUser = await User.findOne({
                 where:{
-                    user_id: userId
+                    id: userId
                 },
             });
 
@@ -44,7 +45,7 @@ export class UserRepository implements IUserRepository {
         try{
             const newUser = await User.findOne({
                 where:{
-                    user_id:userId
+                    id:userId
                 },
             });
 
@@ -61,7 +62,7 @@ export class UserRepository implements IUserRepository {
          try{
             const newUser = await User.findOne({
                 where:{
-                    user_id:userId
+                    id:userId
                 },
             });
 

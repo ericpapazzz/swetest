@@ -35,7 +35,7 @@ export const userService = {
     }
   },
 
-  async updateUser(id: string, username: string): Promise<User> {
+  async updateUser(id: number, username: string): Promise<User> {
     const response = await fetch(`${API_BASE_URL}/updateUser/${id}`, {
       method: 'PUT',
       headers: {
@@ -54,7 +54,7 @@ export const userService = {
     }
   },
 
-  async deleteUser(id: string): Promise<void> {
+  async deleteUser(id: number): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/deleteUser/${id}`, {
       method: 'DELETE',
     });

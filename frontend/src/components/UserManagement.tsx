@@ -6,7 +6,7 @@ import { userService } from '../services/userService';
 const UserManagement: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [newUsername, setNewUsername] = useState('');
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<number | null>(null);
   const [editingUsername, setEditingUsername] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -37,12 +37,12 @@ const UserManagement: React.FC = () => {
     }
   };
 
-  const updateUser = async (id: string, username: string) => {
+  const updateUser = async (id: number, username: string) => {
     setError(null);
     try {
       const updatedUser = await userService.updateUser(id, username);
       setUsers(prev => prev.map(user => 
-        user.id === id ? updatedUser : user
+        user.user_id === id ? updatedUser : user
       ));
       setEditingId(null);
       setEditingUsername('');
@@ -52,11 +52,11 @@ const UserManagement: React.FC = () => {
     }
   };
 
-  const deleteUser = async (id: string) => {
+  const deleteUser = async (id: number) => {
     setError(null);
     try {
       await userService.deleteUser(id);
-      setUsers(prev => prev.filter(user => user.id !== id));
+      setUsers(prev => prev.filter(user => user.user_id !== id));
     } catch (err) {
       setError('Failed to delete user');
       console.error('Error deleting user:', err);
@@ -70,7 +70,7 @@ const UserManagement: React.FC = () => {
   };
 
   const startEditing = (user: User) => {
-    setEditingId(user.id);
+    setEditingId(user.user_id);
     setEditingUsername(user.username);
   };
 
@@ -136,8 +136,8 @@ const UserManagement: React.FC = () => {
           ) : (
             <div className="divide-y divide-gray-700">
               {users.map((user) => (
-                <div key={user.id} className="p-4 flex items-center justify-between">
-                  {editingId === user.id ? (
+                <div key={user.user_id} className="p-4 flex items-center justify-between">
+                  {editingId === user.user_id ? (
                     <div className="flex items-center gap-3 flex-1">
                       <input
                         type="text"
@@ -165,7 +165,7 @@ const UserManagement: React.FC = () => {
                     <>
                       <div className="flex-1">
                         <span className="text-lg">{user.username}</span>
-                        <div className="text-sm text-gray-400">ID: {user.id}</div>
+                        <div className="text-sm text-gray-400">ID: {user.user_id}</div>
                       </div>
                       <div className="flex items-center gap-2">
                         <button
@@ -176,7 +176,7 @@ const UserManagement: React.FC = () => {
                           <Edit3 size={18} />
                         </button>
                         <button
-                          onClick={() => deleteUser(user.id)}
+                          onClick={() => deleteUser(user.user_id)}
                           className="p-2 text-red-400 hover:text-red-300 hover:bg-gray-700 rounded transition-colors"
                           title="Delete user"
                         >
