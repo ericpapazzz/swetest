@@ -1,25 +1,28 @@
 # SWETest - Full Stack User Management Application
 
-Una aplicación completa de gestión de usuarios construida con React + TypeScript en el frontend y Node.js + Express + PostgreSQL en el backend.
+Una aplicación de gestión de usuarios construida con React + TypeScript en el frontend y Node.js + Express + PostgreSQL en el backend.
 
 ## 🏗️ Arquitectura del Proyecto
+
+```
 swetest/
-├── api/ # Backend API (Node.js + Express + TypeScript)
-│ ├── src/
-│ │ ├── server/
-│ │ │ ├── config/ # Configuración de base de datos
-│ │ │ ├── data/ # Modelos, controladores, repositorios
-│ │ │ └── index.ts # Punto de entrada del servidor
-│ │ └── Dockerfile # Contenedor Docker para el backend
-├── frontend/ # Frontend (React + TypeScript + Vite)
-│ ├── src/
-│ │ ├── components/ # Componentes React
-│ │ ├── services/ # Servicios de API
-│ │ ├── types/ # Definiciones de tipos TypeScript
-│ │ └── main.tsx # Punto de entrada de React
-│ └── Dockerfile.dev # Contenedor Docker para desarrollo
-├── docker-compose.yml # Orquestación de contenedores
-└── README.md # Este archivo
+├── api/                          # Backend API (Node.js + Express + TypeScript)
+│   ├── src/
+│   │   ├── server/
+│   │   │   ├── config/           # Configuración de base de datos
+│   │   │   ├── data/             # Modelos, controladores, repositorios
+│   │   │   └── index.ts          # Punto de entrada del servidor
+│   │   └── Dockerfile            # Contenedor Docker para el backend
+├── frontend/                     # Frontend (React + TypeScript + Vite)
+│   ├── src/
+│   │   ├── components/           # Componentes React
+│   │   ├── services/             # Servicios de API
+│   │   ├── types/                # Definiciones de tipos TypeScript
+│   │   └── main.tsx              # Punto de entrada de React
+│   └── Dockerfile.dev            # Contenedor Docker para desarrollo
+├── docker-compose.yml            # Orquestación de contenedores
+└── README.md                     # Este archivo
+```
 
 
 ## 🚀 Ejecución Local
@@ -31,6 +34,51 @@ swetest/
 - **PostgreSQL** (versión 14 o superior)
 - **Docker** y **Docker Compose** (opcional, para ejecución en contenedores)
 
+#### 1. Configurar Base de Datos Local
+
+```bash
+# Conectar a PostgreSQL
+psql -U postgres
+
+# Crear base de datos
+CREATE DATABASE swetest;
+
+# Conectar a la base de datos
+\c swetest
+
+# Crear tabla de usuarios
+CREATE TABLE users (
+    user_id SERIAL PRIMARY KEY,
+    username VARCHAR(100) NOT NULL
+);
+
+# Salir de psql
+\q
+```
+
+#### 2. Configurar variables de entorno
+
+Crear archivo `.env` en /api:
+
+```env
+POSTGRES_HOST=postgres o POSTGRES_HOST=localhost // utiliza 'postgres' para ejecutar utilizando docker contenedores y 'localhost' para ejecutar local
+POSTGRES_DB=tu_db
+POSTGRES_USER=tu_usuario
+POSTGRES_PASSWORD=tu_contrasena
+POSTGRES_PORT=5432
+```
+
+Crear archivo `.env` en la raíz del proyecto:
+
+```env
+# Database Credentials for the Postgres Service
+POSTGRES_DB=tu_db
+POSTGRES_USER=tu_usuario
+POSTGRES_PASSWORD=tu_contrasena
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+```
+
 ### Ejecución con Docker
 
 ```bash
@@ -38,11 +86,48 @@ swetest/
 docker-compose up --build
 ```
 
-#### 2. Acceder a la Aplicación
+#### Acceder a la Aplicación
 
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:8000
 - **Base de Datos**: localhost:5432
+
+### Ejecución Local
+
+#### Ejecutar Backend
+
+```bash
+# Navegar al directorio del backend
+cd api
+
+# Instalar dependencias
+npm install
+
+# Compilar TypeScript
+npm run build
+
+# Ejecutar en modo desarrollo
+npm run dev
+```
+
+El backend estará disponible en: `http://localhost:8000`
+
+#### Ejecutar Frontend
+
+```bash
+# Navegar al directorio del frontend
+cd frontend
+
+# Instalar dependencias
+npm install
+
+# Compilar TypeScript
+npm run build
+
+# Ejecutar en modo desarrollo
+npm run dev
+```
+El frontend estará disponible en: `http://localhost:5173`
 
 ## Configuración
 
@@ -56,11 +141,13 @@ docker-compose up --build
 - **`User.ts`**: Modelo de datos para usuarios
 
 #### Endpoints de API
-GET /api/v1/users # Obtener todos los usuarios
-POST /api/v1/createUser # Crear nuevo usuario
-PUT /api/v1/updateUser/:id # Actualizar usuario
-DELETE /api/v1/deleteUser/:id # Eliminar usuario
-GET /api/v1/users/:id # Obtener usuario por ID
+- GET /api/v1/users # Obtener todos los usuarios 
+- POST /api/v1/createUser # Crear nuevo usuario
+- PUT /api/v1/updateUser/:id # Actualizar usuario
+- DELETE /api/v1/deleteUser/:id # Eliminar usuario
+- GET /api/v1/users/:id # Obtener usuario por ID
+- GET /api/v1/health # 
+- GET /api/v1/analytics #
 
 ### Frontend
 
@@ -76,7 +163,7 @@ GET /api/v1/users/:id # Obtener usuario por ID
 - **Tailwind CSS** para estilos
 - **Lucide React** para iconos
 
-### Comandos Docker Útiles
+### Comandos Docker
 
 ```bash
 # Construir y ejecutar
@@ -97,24 +184,6 @@ docker-compose down -v
 # Reconstruir un servicio específico
 docker-compose up --build api
 ```
-
-## �� Solución de Problemas
-
-### Problema: "Failed to fetch users"
-- **Causa**: Backend no está ejecutándose o no puede conectarse a la base de datos
-- **Solución**: Verificar que el backend esté corriendo y la base de datos esté disponible
-
-### Problema: "Cannot find package 'cors'"
-- **Causa**: Dependencias no instaladas correctamente
-- **Solución**: Ejecutar `npm install` en el directorio del backend
-
-### Problema: "Connection refused" en base de datos
-- **Causa**: Variables de entorno incorrectas o base de datos no disponible
-- **Solución**: Verificar archivo `.env` y estado de la base de datos
-
-### Problema: Frontend no se actualiza
-- **Causa**: Problemas con hot reload en Docker
-- **Solución**: Verificar volúmenes montados y configuración de Vite
 
 ## 📝 Notas de Desarrollo
 
@@ -138,3 +207,4 @@ docker-compose up --build api
   "message": "Descripción del error",
   "error": "Detalles adicionales"
 }
+```
