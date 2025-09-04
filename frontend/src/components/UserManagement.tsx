@@ -42,7 +42,7 @@ const UserManagement: React.FC = () => {
     try {
       const updatedUser = await userService.updateUser(id, username);
       setUsers(prev => prev.map(user => 
-        user.user_id === id ? updatedUser : user
+        user.id === id ? updatedUser : user
       ));
       setEditingId(null);
       setEditingUsername('');
@@ -56,7 +56,7 @@ const UserManagement: React.FC = () => {
     setError(null);
     try {
       await userService.deleteUser(id);
-      setUsers(prev => prev.filter(user => user.user_id !== id));
+      setUsers(prev => prev.filter(user => user.id !== id));
     } catch (err) {
       setError('Failed to delete user');
       console.error('Error deleting user:', err);
@@ -70,7 +70,7 @@ const UserManagement: React.FC = () => {
   };
 
   const startEditing = (user: User) => {
-    setEditingId(user.user_id);
+    setEditingId(user.id);
     setEditingUsername(user.username);
   };
 
@@ -136,8 +136,8 @@ const UserManagement: React.FC = () => {
           ) : (
             <div className="divide-y divide-gray-700">
               {users.map((user) => (
-                <div key={user.user_id} className="p-4 flex items-center justify-between">
-                  {editingId === user.user_id ? (
+                <div key={user.id} className="p-4 flex items-center justify-between">
+                  {editingId === user.id ? (
                     <div className="flex items-center gap-3 flex-1">
                       <input
                         type="text"
@@ -165,7 +165,7 @@ const UserManagement: React.FC = () => {
                     <>
                       <div className="flex-1">
                         <span className="text-lg">{user.username}</span>
-                        <div className="text-sm text-gray-400">ID: {user.user_id}</div>
+                        <div className="text-sm text-gray-400">ID: {user.id}</div>
                       </div>
                       <div className="flex items-center gap-2">
                         <button
@@ -176,7 +176,7 @@ const UserManagement: React.FC = () => {
                           <Edit3 size={18} />
                         </button>
                         <button
-                          onClick={() => deleteUser(user.user_id)}
+                          onClick={() => deleteUser(user.id)}
                           className="p-2 text-red-400 hover:text-red-300 hover:bg-gray-700 rounded transition-colors"
                           title="Delete user"
                         >
