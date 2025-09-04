@@ -43,15 +43,6 @@ psql -U postgres
 # Crear base de datos
 CREATE DATABASE swetest;
 
-# Conectar a la base de datos
-\c swetest
-
-# Crear tabla de usuarios
-CREATE TABLE users (
-    user_id SERIAL PRIMARY KEY,
-    username VARCHAR(100) NOT NULL
-);
-
 # Salir de psql
 \q
 ```
@@ -62,7 +53,7 @@ Crear archivo `.env` en /api:
 
 ```env
 POSTGRES_HOST=postgres o POSTGRES_HOST=localhost // utiliza 'postgres' para ejecutar utilizando docker contenedores y 'localhost' para ejecutar local
-POSTGRES_DB=tu_db
+POSTGRES_DB=swetest
 POSTGRES_USER=tu_usuario
 POSTGRES_PASSWORD=tu_contrasena
 POSTGRES_PORT=5432
